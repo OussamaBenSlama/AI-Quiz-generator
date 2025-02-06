@@ -10,6 +10,10 @@ This project is a web application built with Flask that allows users to upload P
 - Use **Ollama embeddings** for vector similarity search
 - Answer user queries based on document content
 
+## Demo
+<p align="center">
+    <img src="./images/capture.png" width="450">
+</p>
 ## Technologies Used
 - **Flask** (Backend Web Framework)
 - **LangChain** (Document Processing & Retrieval)
