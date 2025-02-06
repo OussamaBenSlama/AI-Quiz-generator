@@ -14,6 +14,7 @@ This project is a web application built with Flask that allows users to upload P
 <p align="center">
     <img src="./images/capture.png" width="450">
 </p>
+
 ## Technologies Used
 - **Flask** (Backend Web Framework)
 - **LangChain** (Document Processing & Retrieval)
