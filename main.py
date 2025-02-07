@@ -7,6 +7,8 @@ from model import get_answer
 from langchain_community.document_loaders import UnstructuredPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from werkzeug.utils import secure_filename
+from pydantic import BaseModel
+import requests
 
 app = FastAPI()
 
@@ -94,3 +96,63 @@ def parse_answer_to_json(answer):
             return json.loads(answer)
         except json.JSONDecodeError:
             raise ValueError("Failed to parse AI response into JSON format.")
+
+
+class Question(BaseModel):
+    id: int
+    text: str
+    format: str
+    options: dict = {}
+    correct_response: str
+    explanation: str
+    user_response: str
+
+@app.post("/evaluate_questions")
+async def evaluate_questions(questions: list[Question]):
+    results = []
+    
+    for question in questions:
+        result = {
+            "id": question.id,
+            "text": question.text,
+            "user_response": question.user_response,
+            "correct_response": question.correct_response,
+            "format": question.format,
+            "is_correct": False,
+            "explanation": question.explanation
+        }
+
+        # Compare based on format type
+        if question.format == "QCM" or question.format == "yesNo":
+            # Normalize and compare the responses for QCM and yesNo
+            if question.user_response.strip().lower() == question.correct_response.strip().lower():
+                result["is_correct"] = True
+
+        elif question.format == "reponse_courte":
+            # Here you would compare using a semantic check (using llama or other methods)
+            response = requests.post(
+                "http://localhost:11434/api/chat",
+                json={
+                    "model": "llama3:latest",
+                    "messages": [ 
+                        {
+                            "role": "user",
+                            "content": f"Is the following user response similar to the correct response? {question.user_response} vs {question.correct_response} . return True or False only , just one word"
+                        }
+                    ],
+                    "stream": False,
+                    "options": {
+                        "temperature": 0.3,
+                        "seed": 101, 
+                        "num_predict": 100,
+                    }
+                }
+            )
+            similarity_result = response.json()['message']['content']
+            print(similarity_result)
+            if similarity_result == 'True':
+                result["is_correct"] = True
+
+        results.append(result)
+
+    return {"results": results}
