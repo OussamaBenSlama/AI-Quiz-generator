@@ -38,6 +38,11 @@ def get_rag_prompt():
     template = """Answer the question based ONLY on the following context:
     {context}
     Question: {question}
+    Ensure:
+    - The response is a valid JSON inside triple backticks (` ```json ... ``` `).
+    - "format" is either "QCM" (multiple-choice), "yesNo" (Yes/No), or "reponse_courte" (short response).
+    - If "format" is "QCM", include 3 answer choices in "options".
+    - Provide a relevant "explanation" for each question.
     """
 
     prompt = ChatPromptTemplate.from_template(template)
