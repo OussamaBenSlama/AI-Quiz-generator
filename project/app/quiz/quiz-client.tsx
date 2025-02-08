@@ -85,7 +85,10 @@ export function QuizClient() {
           <h2 className="text-2xl font-semibold mb-6">{question.text}</h2>
           --{JSON.stringify(question)}--
           <div className="grid gap-4">
-            {Object.values(question.options).map((option, index) => (
+            {(question.format == "reponse_courte") && 
+              <input className="justify-start h-auto py-4 px-6" />
+            }
+            {(question.format == "QCM") && Object.values(question.options).map((option, index) => (
               <Button
                 key={index}
                 variant={selectedAnswer === option ? "default" : "outline"}
@@ -96,6 +99,28 @@ export function QuizClient() {
                 {option}
               </Button>
             ))}
+            {(question.format == "yesNo") && 
+              <>
+                <Button
+                  key={0}
+                  variant={selectedAnswer === "true" ? "default" : "outline"}
+                  className="justify-start h-auto py-4 px-6"
+                  onClick={() => handleAnswerSelect("true")}
+                  disabled={selectedAnswer !== null}
+                >
+                  True
+                </Button>
+                <Button
+                  key={1}
+                  variant={selectedAnswer === "false" ? "default" : "outline"}
+                  className="justify-start h-auto py-4 px-6"
+                  onClick={() => handleAnswerSelect("false")}
+                  disabled={selectedAnswer !== null}
+                >
+                  False
+                </Button>
+              </>
+            }
           </div>
           {showExplanation && (
             <div className="mt-6 p-4 bg-muted rounded-lg">
