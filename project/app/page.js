@@ -7,7 +7,7 @@ import axios from 'axios';
 
 export default function Upload() {
   const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
@@ -48,6 +48,7 @@ export default function Upload() {
         },
       });
 
+      setLoading(false);
       setAlertMessage('File Uploaded');
       setFormData({
         selectedFile: null,
@@ -71,6 +72,14 @@ export default function Upload() {
       setLoading(false); // Set loading state to false after request completes
     }
   };
+
+  if(loading)
+    return (
+      <div className='fullScreen'>
+        <h4 className='text-gray-500'>Processing Your File</h4>
+        <div class="loader"></div>
+      </div>
+    )
 
   return (
     <>
