@@ -13,10 +13,7 @@ This project is a web application built with **FastAPI** and **Nextjs** that all
 
 ## Demo
 <p align="center">
-    <video width="600" controls>
-        <source src="video.mp4" type="video/mp4">
-       Your browser does not support the video tag.
-    </video>
+    ![Demo](images/demo.gif)
 </p>
 
 ## Technologies Used
