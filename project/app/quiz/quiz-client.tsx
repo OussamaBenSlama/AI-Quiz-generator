@@ -22,6 +22,7 @@ export function QuizClient() {
 
   const handleAnswerSelect = (answer: string) => {
     setSelectedAnswer(answer);
+    setShowExplanation(true);
     axios
       .post(
         "http://localhost:8000/evaluate_questions",
@@ -37,8 +38,9 @@ export function QuizClient() {
         console.log(response.data[0]);
         console.log(response.data.results);
         setQuizResponse(response.data);
-        setShowExplanation(true);
-        if (response.data && response.data.is_correct) {
+
+        if (response.data && response.data?.results[0].is_correct) {
+          console.log("hello")
           setScore(score + 1);
         }
       });
@@ -51,6 +53,7 @@ export function QuizClient() {
       setCurrentQuestion(currentQuestion + 1);
       setSelectedAnswer(null);
       setShowExplanation(false);
+      setQuizResponse(null);
     } else {
       // Quiz completed, navigate to results
       router.push(`/results?score=${score}`);
@@ -90,10 +93,20 @@ export function QuizClient() {
             {question.format == "reponse_courte" && (
               <input
                 placeholder="your response"
-                className={"justify-start h-auto py-4 px-6 bg-blue-100 " + (quizResponse ? (quizResponse?.results[0].is_correct?"outline-green-400":"outline-red-400"):"")}
-                onKeyDown={(e) =>
-                  e.key == "Enter" && handleAnswerSelect(e.currentTarget.value)
+                className={
+                  "justify-start h-auto py-4 px-6 bg-blue-100 " +
+                  (quizResponse
+                    ? quizResponse?.results[0].is_correct
+                      ? "outline-green-400"
+                      : "outline-red-400"
+                    : "")
                 }
+                onKeyDown={(e) => {
+                  if (e.key == "Enter") {
+                    handleAnswerSelect(e.currentTarget.value);
+                    e.currentTarget.value = "";
+                  }
+                }}
               />
             )}
             {question.format == "QCM" &&
@@ -101,7 +114,14 @@ export function QuizClient() {
                 <Button
                   key={index}
                   variant={selectedAnswer === option ? "default" : "outline"}
-                  className={"justify-start h-auto py-4 px-6 " + (quizResponse ? (quizResponse?.results[0].is_correct?"outline-green-400":"outline-red-400"):"")}
+                  className={
+                    "justify-start h-auto py-4 px-6 " +
+                    (quizResponse
+                      ? quizResponse?.results[0].is_correct
+                        ? "outline-green-400"
+                        : "outline-red-400"
+                      : "")
+                  }
                   onClick={() => handleAnswerSelect(option)}
                   disabled={selectedAnswer !== null}
                 >
@@ -113,7 +133,14 @@ export function QuizClient() {
                 <Button
                   key={0}
                   variant={selectedAnswer === "true" ? "default" : "outline"}
-                  className={"justify-start h-auto py-4 px-6 " + (quizResponse ? (quizResponse?.results[0].is_correct?"outline-green-400":"outline-red-400"):"")}
+                  className={
+                    "justify-start h-auto py-4 px-6 " +
+                    (quizResponse
+                      ? quizResponse?.results[0].is_correct
+                        ? "outline-green-400"
+                        : "outline-red-400"
+                      : "")
+                  }
                   onClick={() => handleAnswerSelect("true")}
                   disabled={selectedAnswer !== null}
                 >
@@ -122,7 +149,14 @@ export function QuizClient() {
                 <Button
                   key={1}
                   variant={selectedAnswer === "false" ? "default" : "outline"}
-                  className={"justify-start h-auto py-4 px-6 " + (quizResponse ? (quizResponse?.results[0].is_correct?"outline-green-400":"outline-red-400"):"")}
+                  className={
+                    "justify-start h-auto py-4 px-6 " +
+                    (quizResponse
+                      ? quizResponse?.results[0].is_correct
+                        ? "outline-green-400"
+                        : "outline-red-400"
+                      : "")
+                  }
                   onClick={() => handleAnswerSelect("false")}
                   disabled={selectedAnswer !== null}
                 >
@@ -130,17 +164,20 @@ export function QuizClient() {
                 </Button>
               </>
             )}
-            {
-              quizResponse && quizResponse?.results[0].is_correct == true &&
-            <div className="text-green-400 mt-[-15px]">Correct Answer</div>
-            }
-            {
-              quizResponse && quizResponse?.results[0].is_correct == false &&
+            {quizResponse && quizResponse?.results[0].is_correct == true && (
+              <div className="text-green-400 mt-[-15px]">Correct Answer</div>
+            )}
+            {quizResponse && quizResponse?.results[0].is_correct == false && (
               <div className="text-red-400 mt-[-15px]">Wrong Answer</div>
-            }
+            )}
           </div>
           {showExplanation && (
-            <div className={"mt-6 p-4 bg-muted rounded-lg h-[3.25rem] " + (!quizResponse && "placeholder-animation")}>
+            <div
+              className={
+                "mt-6 p-4 bg-muted rounded-lg min-h-[3.25rem] " +
+                (!quizResponse && "placeholder-animation")
+              }
+            >
               <p className="text-sm">{quizResponse?.results[0].explanation}</p>
             </div>
           )}

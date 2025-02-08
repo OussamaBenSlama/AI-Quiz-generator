@@ -137,7 +137,8 @@ async def evaluate_questions(questions: list[Question]):
                     "messages": [ 
                         {
                             "role": "user",
-                            "content": f"Is the following user response similar to the correct response? {question.user_response} vs {question.correct_response} . return True or False only , just one word"
+                            # "content": f"Is the following user response similar to the correct response? {question.user_response} vs {question.correct_response} . return True or False only , just one word"
+                            "content": f"Can we consider this '{question.user_response}' as a response to this question: '{question.text}' . return True or False only , just one word"
                         }
                     ],
                     "stream": False,

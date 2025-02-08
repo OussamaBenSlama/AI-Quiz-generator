@@ -1,14 +1,15 @@
-# AI-Powered PDF Retrieval Web App
+# AI Quiz Generator
 
 ## Overview
-This project is a web application built with Flask that allows users to upload PDF documents and ask questions about their content. The application uses **LangChain**, **ChromaDB**, and **Ollama** embeddings to process documents and retrieve relevant answers using **Retrieval-Augmented Generation (RAG)**.
+This project is a web application built with **FastAPI** and **Nextjs** that allows users to upload documents and generate a quiz based on their content. The application uses **LangChain**, **ChromaDB**, and **Ollama** embeddings to process documents and retrieve relevant answers through **Retrieval-Augmented Generation (RAG)**.
 
 ## Features
-- Upload PDF documents dynamically
-- Process and split text into smaller chunks for better retrieval
+- Dynamically upload documents
+- Process and split text into smaller chunks for improved retrieval
 - Store document embeddings in **ChromaDB**
 - Use **Ollama embeddings** for vector similarity search
-- Answer user queries based on document content
+- Generate a quiz with 8 questions based on the content
+- Submit your answers and receive feedback
 
 ## Demo
 <p align="center">
@@ -16,49 +17,79 @@ This project is a web application built with Flask that allows users to upload P
 </p>
 
 ## Technologies Used
-- **Flask** (Backend Web Framework)
+- **FastApi** (Backend Web Framework)
 - **LangChain** (Document Processing & Retrieval)
 - **ChromaDB** (Vector Database)
 - **Ollama** (Embeddings for text retrieval)
-- **HTML/CSS** (Frontend Interface)
+- **NextJS** (Frontend Interface)
 - **Unstructured.io** (Document Parsing)
 
 ## Installation
+
 ### Prerequisites
-Ensure you have **Python 3.12** installed and set up a virtual environment.
+Before getting started, make sure you have the following installed:
+
+- **Python 3.11** or later
+- A virtual environment manager (e.g., `venv`, `virtualenv`)
 
 ### Steps to Install
+
 1. Clone the repository:
-   ```bash
-   https://github.com/OussamaBenSlama/Ollama-RAG-PDF.git
-   cd ollama_RAG_PDF
-   ```
-2. Create a virtual environment and activate it:
-   ```bash
-   python -m venv .venv
-   source .venv/bin/activate  # On Mac/Linux
-   .venv\Scripts\activate  # On Windows
-   ```
-3. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-4. Start the Flask server:
-   ```bash
-   python app.py
-   ```
-5. Open `http://127.0.0.1:5000` in your browser.
+    ```bash
+    git clone https://github.com/OussamaBenSlama/Ollama-RAG-PDF
+    ```
+
+2. Navigate to the project directory:
+    ```bash
+    cd backend
+    ```
+
+3. Create a virtual environment (optional but recommended):
+    ```bash
+    python3 -m venv .venv
+    ```
+
+4. Activate the virtual environment:
+    - On Windows:
+      ```bash
+      .\venv\Scripts\activate
+      ```
+
+5. Install dependencies:
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+6. Install **Ollama** and download the model:
+    - First, ensure you have **Ollama** installed. If you haven't, you can get it from [ollama.com](https://ollama.com/).
+    - Then, run the following command to download the **Llama3** model:
+    ```bash
+    ollama run llama3:latest
+    ```
+7. Set up and run the Next.js frontend:
+    - Navigate to the `project` directory:
+    ```bash
+    cd project
+    ```
+    - Install the required dependencies for Next.js:
+    ```bash
+    npm install
+    ```
+    - Start the Next.js development server:
+    ```bash
+    npm run dev
+    ```
+    - The frontend will now be available at `http://localhost:3000`.
+
+Once you've completed these steps, you're ready to use both the backend and frontend of the application.
+
+Once you've completed these steps, you're ready to use the application.
+
 
 ## Usage
+
 1. Upload a PDF file through the web interface.
-2. Enter a question related to the document.
-3. The system processes the document and retrieves the most relevant answer.
-
-## License
-This project is licensed under the MIT License.
-
-## Author
-**Oussama Ben Slama**  
-[GitHub](https://github.com/OussamaBenSlama) 
-[LinkedIn](https://www.linkedin.com/in/oussama-ben-slama/)
-
+2. The system will generate a quiz with 8 questions based on the content of the document.
+3. Respond to each question in the quiz.
+4. Submit your answers when you're finished.
+5. Receive feedback on your responses.
