@@ -10,6 +10,7 @@ This project is a web application built with **FastAPI** and **Nextjs** that all
 - Use **Ollama embeddings** for vector similarity search
 - Generate a quiz with 8 questions based on the content
 - Submit your answers and receive feedback
+- Different types of questions (Yes/No, multiple choice, short response)
 
 ## Demo
 ![Demo](images/demo.gif)
