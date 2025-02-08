@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { QuizData, QuizResult } from "@/lib/types";
+import { QuizData, QuizResponse, QuizResult } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import axios from "axios";
@@ -10,7 +10,7 @@ import axios from "axios";
 export function QuizClient() {
   const router = useRouter();
   const [quizData, setQuizData] = useState<QuizData | null>(null);
-  const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
+  const [quizResponse, setQuizResponse] = useState<QuizResponse | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [score, setScore] = useState(0);
@@ -25,7 +25,7 @@ export function QuizClient() {
     axios
       .post(
         "http://localhost:8000/evaluate_questions",
-        [{ ...quizData, user_response: answer }],
+        [{ ...question, user_response: answer }],
         {
           headers: {
             "Content-Type": "application/json",
@@ -34,7 +34,9 @@ export function QuizClient() {
       )
       .then((response) => {
         console.log(response.data);
-        setQuizResult(response.data);
+        console.log(response.data[0]);
+        console.log(response.data.results);
+        setQuizResponse(response.data);
         setShowExplanation(true);
         if (response.data && response.data.is_correct) {
           setScore(score + 1);
@@ -83,23 +85,30 @@ export function QuizClient() {
 
         <div className="bg-card p-6 rounded-lg shadow-sm">
           <h2 className="text-2xl font-semibold mb-6">{question.text}</h2>
-          --{JSON.stringify(question)}--
+          {/* --{JSON.stringify(question)}-- */}
           <div className="grid gap-4">
-            {(question.format == "reponse_courte") && 
-              <input className="justify-start h-auto py-4 px-6" />
-            }
-            {(question.format == "QCM") && Object.values(question.options).map((option, index) => (
-              <Button
-                key={index}
-                variant={selectedAnswer === option ? "default" : "outline"}
-                className="justify-start h-auto py-4 px-6"
-                onClick={() => handleAnswerSelect(option)}
-                disabled={selectedAnswer !== null}
-              >
-                {option}
-              </Button>
-            ))}
-            {(question.format == "yesNo") && 
+            {question.format == "reponse_courte" && (
+              <input
+                placeholder="your response"
+                className="justify-start h-auto py-4 px-6 bg-gray-50"
+                onKeyDown={(e) =>
+                  e.key == "Enter" && handleAnswerSelect(e.currentTarget.value)
+                }
+              />
+            )}
+            {question.format == "QCM" &&
+              Object.values(question.options).map((option, index) => (
+                <Button
+                  key={index}
+                  variant={selectedAnswer === option ? "default" : "outline"}
+                  className="justify-start h-auto py-4 px-6"
+                  onClick={() => handleAnswerSelect(option)}
+                  disabled={selectedAnswer !== null}
+                >
+                  {option}
+                </Button>
+              ))}
+            {question.format == "yesNo" && (
               <>
                 <Button
                   key={0}
@@ -120,11 +129,11 @@ export function QuizClient() {
                   False
                 </Button>
               </>
-            }
+            )}
           </div>
           {showExplanation && (
             <div className="mt-6 p-4 bg-muted rounded-lg">
-              <p className="text-sm">{quizResult?.explanation}</p>
+              <p className="text-sm">{quizResponse?.results[0].explanation}</p>
             </div>
           )}
           {selectedAnswer && (
