@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import axios from "axios";
 
-
 export function QuizClient() {
   const router = useRouter();
   const [quizData, setQuizData] = useState<QuizData | null>(null);
@@ -18,29 +17,34 @@ export function QuizClient() {
   const [showExplanation, setShowExplanation] = useState(false);
 
   useEffect(() => {
-    setQuizData(JSON.parse(localStorage.getItem('quizData') || "{}").answer);
+    setQuizData(JSON.parse(localStorage.getItem("quizData") || "{}").answer);
   }, []);
 
   const handleAnswerSelect = (answer: string) => {
     setSelectedAnswer(answer);
-    axios.post(process.env.BACKEND_HOST + '/evaluate_questions', [{...quizData, user_response: answer}], {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }).then((response)=>{
-      console.log(response.data)
-      setQuizResult(response.data)
-      setShowExplanation(true);
-      if (response.data && response.data.is_correct) {
-        setScore(score + 1);
-      }
-    });
-    
+    axios
+      .post(
+        "http://localhost:8000/evaluate_questions",
+        [{ ...quizData, user_response: answer }],
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response.data);
+        setQuizResult(response.data);
+        setShowExplanation(true);
+        if (response.data && response.data.is_correct) {
+          setScore(score + 1);
+        }
+      });
   };
 
   const handleNextQuestion = () => {
     if (!quizData) return;
-    
+
     if (currentQuestion < quizData.questions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
       setSelectedAnswer(null);
@@ -79,9 +83,9 @@ export function QuizClient() {
 
         <div className="bg-card p-6 rounded-lg shadow-sm">
           <h2 className="text-2xl font-semibold mb-6">{question.text}</h2>
-          
+          --{JSON.stringify(question)}--
           <div className="grid gap-4">
-            {question.options.map((option, index) => (
+            {Object.values(question.options).map((option, index) => (
               <Button
                 key={index}
                 variant={selectedAnswer === option ? "default" : "outline"}
@@ -93,17 +97,17 @@ export function QuizClient() {
               </Button>
             ))}
           </div>
-
           {showExplanation && (
             <div className="mt-6 p-4 bg-muted rounded-lg">
               <p className="text-sm">{quizResult?.explanation}</p>
             </div>
           )}
-
           {selectedAnswer && (
             <div className="mt-6">
               <Button onClick={handleNextQuestion}>
-                {currentQuestion < quizData.questions.length - 1 ? "Next Question" : "See Results"}
+                {currentQuestion < quizData.questions.length - 1
+                  ? "Next Question"
+                  : "See Results"}
               </Button>
             </div>
           )}

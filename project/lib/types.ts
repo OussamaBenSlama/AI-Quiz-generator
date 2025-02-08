@@ -4,13 +4,18 @@
 //   answer: string;
 //   explanation?: string;
 // }
+
+type OptionsType = {
+  [key: string]: string;
+};
+
 export interface Question {
   id: number;
   text: string;
   correct_response: string;
   explanation: string;
   format: string;
-  options: string[];
+  options: OptionsType;
   response?: string;
 }
 
