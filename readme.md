@@ -12,9 +12,7 @@ This project is a web application built with **FastAPI** and **Nextjs** that all
 - Submit your answers and receive feedback
 
 ## Demo
-<p align="center">
-    ![Demo](images/demo.gif)
-</p>
+![Demo](images/demo.gif)
 
 ## Technologies Used
 - **FastApi** (Backend Web Framework)
