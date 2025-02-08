@@ -4,15 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-interface ResultsClientProps {
-  params: {
-    domain: string;
-    category: string;
-    difficulty: string;
-  };
-}
-
-export function ResultsClient({ params }: ResultsClientProps) {
+export function ResultsClient() {
   const searchParams = useSearchParams();
   const score = parseInt(searchParams.get("score") || "0", 10);
 
@@ -31,8 +23,8 @@ export function ResultsClient({ params }: ResultsClientProps) {
             <Link href="/">
               <Button className="w-full">Return to Home</Button>
             </Link>
-            <Link href={`/domains/${params.domain}`}>
-              <Button variant="outline" className="w-full">Try Another Quiz</Button>
+            <Link href={`/quiz`}>
+              <Button variant="outline" className="w-full">Try Again</Button>
             </Link>
           </div>
         </div>

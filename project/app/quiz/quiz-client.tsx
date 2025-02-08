@@ -56,7 +56,7 @@ export function QuizClient() {
       setQuizResponse(null);
     } else {
       // Quiz completed, navigate to results
-      router.push(`/results?score=${score}`);
+      router.push(`/quiz/results?score=${score}`);
     }
   };
 
